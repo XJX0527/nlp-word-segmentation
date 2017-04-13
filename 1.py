@@ -22,7 +22,7 @@ def create_input_mode(corpus_file):
 
 input_dir = 'training_data'
 input_file = input_dir + '/' + 'part.utf8'
-# input_file = input_dir + '/' + 'pku_training.utf8'
+input_file = input_dir + '/' + 'pku_training.utf8'
 input_model = create_input_mode(input_file)
 print(input_model[:100])
 
@@ -37,7 +37,7 @@ two_gram = create_ngram(input_model)
 print(two_gram[:100])
 
 STATE_SPACE = ['B', 'M', 'E', 'S']
-OBSERVE_SPACE = list(set(x[1] for x in input_model))
+OBSERVE_SPACE = sorted(list(set(x[1] for x in input_model)))
 print(len(OBSERVE_SPACE), len(input_model))
 
 def create_reverse_dict(alist):
@@ -83,14 +83,26 @@ def create_observe_probobility(input_model):
                OBSERVE_SPACE_REVERSE_DICT[x[1]])
               for x in input_model]
 
+    from collections import Counter
+    state_counts = Counter([x[0] for x in indexs])
+    pair_counts = Counter([x for x in indexs])
+    # print("input_model %s" % input_model)
+    # print("OBSERVE_SPACE %s" % OBSERVE_SPACE)
+    # print("indexs %s" % indexs)
+    # print("satate_counts %s" % state_counts)
+    # print("pair_counts %s" % pair_counts)
     for i in range(len(STATE_SPACE)):
-        total = len([1 for x in indexs if x[0] == i])
+        total = state_counts[i]
+        print("total %s, %s" %(i, total))
         for j in range(len(OBSERVE_SPACE)):
-            cnt = len([1 for x in indexs if x[0] == i and x[1] == j])
-            rst[i][j] = cnt / total
+            # cnt = len([1 for x in indexs if x[0] == i and x[1] == j])
+            # rst[i][j] = cnt / total
+            rst[i][j] = pair_counts[(i, j)] / total
 
     return rst
 
 
 observe_probobility =  create_observe_probobility(input_model)
 print(observe_probobility)
+
+
