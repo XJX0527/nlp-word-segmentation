@@ -1,0 +1,19 @@
+* Word segmentation
+** notes
+*** 模型快创建好了，基于pku_training.utf8
+    <2017-04-13 Thu>
+    在生成 生成概率矩阵时， 运行速度非常慢。
+    可能需要再优化一下。现在是一个双重循环，每个循环里又是很大的循环（list comprehension）。
+
+    总共花费约2个小时。
+
+** input modle
+   the text file is the  input model.
+   I will use a list of tuple (S O). O is the oberved value, which is  chinese character, S is the  hiddern value, which is its segmentation status.
+
+   an example of input model:
+   #+begin_src python :results output
+   [('B', '迷'), ('E', '失'), ('S', '了'), ('B', '来'), ('E', '路'), ('S', '。')]
+   #+end_src
+
+   Then both A and B can be calculated from this list.
